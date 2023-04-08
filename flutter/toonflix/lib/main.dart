@@ -12,39 +12,72 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> {
-  List<int> numbers = [];
+  bool showTitle = true;
 
-  void onClicked() {
+  void toggleTitle() {
     setState(() {
-      numbers.add(numbers.length);
+      showTitle = !showTitle;
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: ThemeData(
+        textTheme: const TextTheme(
+          titleLarge: TextStyle(
+            color: Colors.red,
+          ),
+        ),
+      ),
       home: Scaffold(
         backgroundColor: Colors.white,
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text(
-                'Click here',
-                style: TextStyle(
-                  fontSize: 30,
-                ),
-              ),
-              for (int n in numbers) Text('$n'),
+              showTitle ? const MyLargeTitle() : const Text('nothing'),
               IconButton(
-                onPressed: onClicked,
-                icon: const Icon(
-                  Icons.add_box_rounded,
-                ),
-              )
+                  onPressed: toggleTitle,
+                  icon: const Icon(Icons.remove_red_eye))
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class MyLargeTitle extends StatefulWidget {
+  const MyLargeTitle({
+    super.key,
+  });
+
+  @override
+  State<MyLargeTitle> createState() => _MyLargeTitleState();
+}
+
+class _MyLargeTitleState extends State<MyLargeTitle> {
+  @override
+  void initState() {
+    super.initState();
+    print("initState"); // 1
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    print("dispose!"); // 3 when clicked eye button
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    print("build"); // 2
+    return Text(
+      'My Large Title',
+      style: TextStyle(
+        fontSize: 30,
+        color: Theme.of(context).textTheme.titleLarge!.color,
       ),
     );
   }
